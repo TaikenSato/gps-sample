@@ -33,7 +33,12 @@ export default function Home() {
         {!isFirstRef && !isAvailable && <ErrorText />}
         {isAvailable && (
           <div>
-            <button onClick={getCurrentPosition}>座標取得</button>
+            <button
+              className="bg-blue-600 hover:bg-blue-500 text-white rounded px-4 py-2"
+              onClick={getCurrentPosition}
+            >
+              座標取得
+            </button>
             <div>
               緯度: {position.latitude}
               <br />
