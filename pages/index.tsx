@@ -14,14 +14,40 @@ export default function Home() {
       setAvailable(true);
     }
   }, [isAvailable]);
-
+  type Error = {
+    code: number;
+  };
+  const error = (err: Error) => {
+    switch (err.code) {
+      case 1:
+        // 位置情報を利用する権限が無い場合
+        alert("権限なし(code:" + err.code + ")");
+        break;
+      case 2:
+        // 電波状況等により位置情報が取得できなかった場合
+        alert("位置情報取得失敗(code:" + err.code + ")");
+        break;
+      case 3:
+        // 位置情報取得に時間がかかり過ぎて接続がタイムアウトした場合
+        alert("タイムアウト(code:" + err.code + ")");
+        break;
+      default:
+        // 上記以外の原因不明エラー
+        alert("原因不明(code:" + err.code + ")");
+    }
+  };
   const getCurrentPosition = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      if (latitude && longitude) {
-        setPosition({ latitude, longitude });
-      }
-    });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        if (latitude && longitude) {
+          setPosition({ latitude, longitude });
+        }
+      }, error);
+    } else {
+      // Geolocation APIに対応していない端末
+      alert("位置情報サービス非対応");
+    }
   };
 
   if (isFirstRef.current) return <div className="App">Loading...</div>;
